@@ -1,0 +1,84 @@
+name: CANEX Safe Content Patch
+
+on:
+  push:
+    branches: [canex-safe-patch-01]
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Apply narrowly scoped narrative corrections
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          replacements = {
+              'src/game/config.ts': [
+                  ('Case 01: The Blank Page (Lagos Executive Testing Chamber)', 'Case 01: The Room (Lagos Examination Chamber)'),
+                  ('name: \'Mama Ese Oduko\'', 'name: \'Mama Ese\''),
+                  ('origin: \'Lagos, Nigeria\'', 'origin: \'Delta State, Nigeria\'', 1),
+                  ('title: \'Retired Federal Director\'', 'title: \'Retired Director, Federal Government of Nigeria\'', 1),
+                  ('name: \'Chief Obiagu “Obi” Okonkwo\'', 'name: \'Chief Obi\''),
+                  ('origin: \'Port Harcourt / Cairo Trade Corridor\'', 'origin: \'Cairo, Egypt\''),
+                  ('title: \'Mining Magnate & Private Equity Tycoon\'', 'title: \'Egyptian Businessman & Investor\''),
+                  ('role: \'High-Stakes Power Broker\'', 'role: \'International Business Negotiator\''),
+                  ('archetype: \'The Corrupting Oligarch\'', 'archetype: \'The Strategic Manipulator\''),
+              ],
+              'src/game/main.ts': [
+                  ('SOVEREIGN CHARTER EVALUATION // CASE 01', 'THE HUMAN EXAM // CASE 01'),
+                  ('RULE 05: ONE QUESTION. ONE ANSWER.', 'RULE 05: WHEN TIME EXPIRES, THE EXAMINATION ENDS.'),
+              ],
+              'src/App.tsx': [
+                  ('SOVEREIGN EXAMINATION OS v4.2 [LAGOS SECTOR 07]', 'EXAMINATION SYSTEM // CASE 01'),
+                  ('CASE 01: THE BLANK PAGE // NIGERIAN SOVEREIGN HALL', 'CASE 01: THE ROOM // LAGOS, NIGERIA'),
+                  ('You have 60 minutes. There is only ONE question, and only ONE correct answer.', 'You have 60 minutes. There is one question. The paper is blank. Begin.'),
+                  ('Rule 3: Only ONE candidate will be chosen.', 'Rule 4: EVERY DECISION IS RECORDED.'),
+                  ('Write: HUMAN CONSCIENCE & MORAL EMPATHY', 'Write your considered response to the examination.'),
+              ],
+          }
+
+          rule_block_old = '''        {\n            number: 1,\n            title: "Silence & Isolation",\n            text: "Do not attempt to communicate with the Invigilators, tamper with the recording devices, or leave the chamber until your submission is confirmed."\n        },\n        {\n            number: 2,\n            title: "Preservation of Material",\n            text: "Do not spoil, tear, stain, burn, or mark your examination paper in bad faith. Damaged submissions are instantly nullified."\n        },\n        {\n            number: 3,\n            title: "Singular Selection",\n            text: "Only ONE candidate among the nine will be chosen, based strictly on the only acceptable submission."\n        },\n        {\n            number: 4,\n            title: "Absolute Disqualification",\n            text: "Any physical violation or rule transgression results in immediate, permanent disqualification and biometric security removal."\n        },\n        {\n            number: 5,\n            title: "The Single Question",\n            text: "You have exactly 60 minutes. There is only ONE question, and only ONE correct answer."\n        }'''
+
+          rule_block_new = '''        {\n            number: 1,\n            title: "REMAIN IN THE ROOM",\n            text: "You may move freely within the examination room. You may not leave it."\n        },\n        {\n            number: 2,\n            title: "DO NOT ALTER YOUR EXAMINATION PAPER",\n            text: "Your examination paper must remain in its original condition until instructed otherwise."\n        },\n        {\n            number: 3,\n            title: "INFORMATION FROM ANOTHER CANDIDATE IS NOT VERIFIED",\n            text: "Statements, claims, instructions and evidence provided by another candidate are unverified unless independently confirmed."\n        },\n        {\n            number: 4,\n            title: "EVERY DECISION IS RECORDED",\n            text: "Your actions, decisions and interactions may be recorded and evaluated."\n        },\n        {\n            number: 5,\n            title: "WHEN TIME EXPIRES, THE EXAMINATION ENDS",\n            text: "At zero, no further action will be accepted."\n        }'''
+
+          p = Path('src/game/config.ts')
+          s = p.read_text()
+          if rule_block_old not in s:
+              raise SystemExit('Expected old rules block not found; refusing partial patch.')
+          s = s.replace(rule_block_old, rule_block_new, 1)
+          replacements['src/game/config.ts'] = [(a,b,*rest) for a,b,*rest in replacements['src/game/config.ts']]
+
+          for path, reps in replacements.items():
+              p = Path(path)
+              s = p.read_text()
+              for item in reps:
+                  old, new, *count = item
+                  n = count[0] if count else -1
+                  if old not in s:
+                      raise SystemExit(f'Expected text not found in {path}: {old}')
+                  s = s.replace(old, new, n)
+              if path == 'src/game/config.ts':
+                  s = s.replace('THE ARCHITECT’S ANSWER: HUMAN CONSCIENCE', 'THE HUMAN EXAMINATION RESPONSE', 1)
+                  s = s.replace('The true answer is Human Conscience & Moral Integrity.', 'The examination evaluates judgment under uncertainty.', 1)
+              p.write_text(s)
+          PY
+
+          git diff --check
+          git diff -- src/game/config.ts src/App.tsx src/game/main.ts
+
+      - name: Commit patch and remove temporary workflow
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          rm -f .github/workflows/canex-safe-patch.yml
+          git add src/game/config.ts src/App.tsx src/game/main.ts .github/workflows/canex-safe-patch.yml
+          git commit -m "CANEX: safe narrative consistency patch [skip ci]"
+          git push
