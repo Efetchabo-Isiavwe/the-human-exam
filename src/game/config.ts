@@ -1,6 +1,6 @@
 /**
  * THE HUMAN EXAM - GAME CONFIGURATION & NARRATIVE DATABASE
- * Case 01: The Room (Lagos Examination Chamber)
+ * Case 01: The Blank Page (Lagos Executive Testing Chamber)
  */
 
 export interface CandidateData {
@@ -98,28 +98,28 @@ export const GAME_CONFIG = {
     rules: [
         {
             number: 1,
-            title: "REMAIN IN THE ROOM",
-            text: "You may move freely within the examination room. You may not leave it."
+            title: "Silence & Isolation",
+            text: "Do not attempt to communicate with the Invigilators, tamper with the recording devices, or leave the chamber until your submission is confirmed."
         },
         {
             number: 2,
-            title: "DO NOT ALTER YOUR EXAMINATION PAPER",
-            text: "Your examination paper must remain in its original condition until instructed otherwise."
+            title: "Preservation of Material",
+            text: "Do not spoil, tear, stain, burn, or mark your examination paper in bad faith. Damaged submissions are instantly nullified."
         },
         {
             number: 3,
-            title: "INFORMATION FROM ANOTHER CANDIDATE IS NOT VERIFIED",
-            text: "Statements, claims, instructions and evidence provided by another candidate are unverified unless independently confirmed."
+            title: "Singular Selection",
+            text: "Only ONE candidate among the nine will be chosen, based strictly on the only acceptable submission."
         },
         {
             number: 4,
-            title: "EVERY DECISION IS RECORDED",
-            text: "Your actions, decisions and interactions may be recorded and evaluated."
+            title: "Absolute Disqualification",
+            text: "Any physical violation or rule transgression results in immediate, permanent disqualification and biometric security removal."
         },
         {
             number: 5,
-            title: "WHEN TIME EXPIRES, THE EXAMINATION ENDS",
-            text: "At zero, no further action will be accepted."
+            title: "The Single Question",
+            text: "You have exactly 60 minutes. There is only ONE question, and only ONE correct answer."
         }
     ]
 } as const;
@@ -131,9 +131,9 @@ export const CANDIDATES: CandidateData[] = [
     {
         id: 'candidate_01',
         number: 1,
-        name: 'Mama Ese',
-        origin: 'Delta State, Nigeria',
-        title: 'Retired Director, Federal Government of Nigeria',
+        name: 'Mama Ese Oduko',
+        origin: 'Lagos, Nigeria',
+        title: 'Retired Federal Director',
         role: 'Veteran Bureaucrat',
         archetype: 'The Stoic Institutionalist',
         bio: '40 years inside ministerial corridors. She has overseen state security tenders and knows bureaucratic traps before they are sprung. She hasn’t picked up her pen.',
@@ -460,11 +460,11 @@ export const CANDIDATES: CandidateData[] = [
     {
         id: 'candidate_08',
         number: 8,
-        name: 'Chief Obi',
-        origin: 'Cairo, Egypt',
-        title: 'Egyptian Businessman & Investor',
-        role: 'International Business Negotiator',
-        archetype: 'The Strategic Manipulator',
+        name: 'Chief Obiagu “Obi” Okonkwo',
+        origin: 'Port Harcourt / Cairo Trade Corridor',
+        title: 'Mining Magnate & Private Equity Tycoon',
+        role: 'High-Stakes Power Broker',
+        archetype: 'The Corrupting Oligarch',
         bio: 'A veteran of oil concessions, infrastructure cartels, and back-room lobbying. Chief Obi believes every human being has an invoice and every examination can be settled with the right financial wire.',
         color: '#ffca28',
         accentColor: '#ffd54f',
