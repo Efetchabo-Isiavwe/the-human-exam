@@ -37,6 +37,7 @@ export class Game extends Scene {
     private candidateSprites: Map<string, Phaser.GameObjects.Container> = new Map();
     private roomObjectContainers: Map<string, Phaser.GameObjects.Container> = new Map();
     private uvOverlayGraphics!: Phaser.GameObjects.Graphics;
+    private roomTimerDisplay?: Phaser.GameObjects.Text;
     private ambientDustParticles!: Phaser.GameObjects.Graphics;
     private alarmLightGraphics!: Phaser.GameObjects.Graphics;
     private isAlarmActive: boolean = false;
@@ -110,10 +111,10 @@ export class Game extends Scene {
             g.lineBetween(0, y, GAME_WIDTH, y);
         }
 
-        // Central circular emblem on floor (Sovereign Council seal)
+        // Central circular emblem on floor (Executive Council seal — geometric West African motif)
         g.lineStyle(2, 0xd4af37, 0.25);
         g.strokeCircle(512, 384, 180);
-        g.lineStyle(1, 0x00f0ff, 0.15);
+        g.lineStyle(1, 0x1e1b4b, 0.35);
         g.strokeCircle(512, 384, 160);
         g.strokeCircle(512, 384, 200);
 
@@ -140,8 +141,8 @@ export class Game extends Scene {
         g.lineStyle(2, 0x24324f, 1);
         g.strokeRect(-220, -25, 440, 50);
 
-        // Subtle cyan glow along mirror frame
-        g.lineStyle(1, 0x00f0ff, 0.4);
+        // Subtle gold glow along mirror frame
+        g.lineStyle(1, 0xd4af37, 0.35);
         g.lineBetween(-215, 23, 215, 23);
 
         // Guard silhouettes behind one-way glass
@@ -166,7 +167,19 @@ export class Game extends Scene {
             color: '#8e9bb0'
         }).setOrigin(0.5);
 
-        container.add([g, text]);
+        // Lagos harbor skyline silhouette faintly visible through the tinted glass
+        const skyline = this.add.graphics();
+        skyline.fillStyle(0x0f172a, 0.55);
+        const towers = [
+            { x: -195, w: 10, h: 14 }, { x: -178, w: 14, h: 22 }, { x: -158, w: 9, h: 12 },
+            { x: -140, w: 16, h: 26 }, { x: -115, w: 11, h: 16 }, { x: -95, w: 13, h: 20 },
+            { x: 100, w: 12, h: 18 }, { x: 120, w: 15, h: 24 }, { x: 145, w: 10, h: 14 },
+            { x: 165, w: 13, h: 20 }, { x: 185, w: 9, h: 12 }, { x: 200, w: 14, h: 22 }
+        ];
+        towers.forEach(t => skyline.fillRect(t.x, 25 - t.h, t.w, t.h));
+        skyline.fillStyle(0xd4af37, 0.35);
+        towers.forEach((t, i) => { if (i % 3 === 0) skyline.fillRect(t.x + 2, 25 - t.h + 3, 2, 2); });
+        container.add([skyline, g, text]);
 
         // Interactive click on Observation Window
         const hitZone = this.add.rectangle(0, 0, 440, 50, 0x000000, 0.001)
@@ -219,7 +232,7 @@ export class Game extends Scene {
         g.lineBetween(190, 35, 190, 45);
         g.lineBetween(190, 45, 175, 45);
 
-        const headerText = this.add.text(0, -30, 'SOVEREIGN CHARTER EVALUATION // CASE 01', {
+        const headerText = this.add.text(0, -30, 'THE HUMAN EXAM // CASE 01 — THE ROOM', {
             fontFamily: 'monospace',
             fontSize: '11px',
             color: '#d4af37'
@@ -229,16 +242,20 @@ export class Game extends Scene {
             fontFamily: 'monospace',
             fontSize: '18px',
             fontStyle: 'bold',
-            color: '#00f0ff'
+            color: '#f1f5f9'
         }).setOrigin(0.5);
 
-        const statusText = this.add.text(0, 22, 'RULE 05: ONE QUESTION. ONE ANSWER.', {
+        const statusText = this.add.text(0, 22, 'RULE 05: WHEN TIME EXPIRES, THE EXAMINATION ENDS.', {
             fontFamily: 'monospace',
             fontSize: '11px',
-            color: '#e63946'
+            color: '#e11d48'
         }).setOrigin(0.5);
 
         container.add([g, headerText, timerDisplay, statusText]);
+
+        // Single authoritative timer source: keep a reference so the room
+        // board always mirrors the exact same remaining time as the top HUD.
+        this.roomTimerDisplay = timerDisplay;
 
         // Interactivity
         const hitZone = this.add.rectangle(0, 0, 380, 90, 0x000000, 0.001)
@@ -333,9 +350,9 @@ export class Game extends Scene {
                 .setInteractive({ cursor: 'pointer' });
 
             hitZone.on('pointerover', () => {
-                g.lineStyle(2, 0x00f0ff, 1);
+                g.lineStyle(2, 0xd4af37, 1);
                 g.strokeRect(-obj.width / 2, -obj.height / 2, obj.width, obj.height);
-                label.setColor('#00f0ff');
+                label.setColor('#d4af37');
             });
 
             hitZone.on('pointerout', () => {
@@ -444,9 +461,9 @@ export class Game extends Scene {
                 .setInteractive({ cursor: 'pointer' });
 
             hitZone.on('pointerover', () => {
-                g.lineStyle(2, isPlayer ? 0x00e676 : 0x00f0ff, 1);
+                g.lineStyle(2, isPlayer ? 0x00e676 : 0xd4af37, 1);
                 g.strokeRect(-desk.deskWidth / 2, -desk.deskHeight / 2, desk.deskWidth, desk.deskHeight);
-                nameplate.setColor(isPlayer ? '#00e676' : '#00f0ff');
+                nameplate.setColor(isPlayer ? '#00e676' : '#d4af37');
             });
 
             hitZone.on('pointerout', () => {
@@ -512,6 +529,10 @@ export class Game extends Scene {
             callback: () => {
                 if (!this.isPaused && !this.isCinematic) {
                     this.remainingSeconds = Math.max(0, this.remainingSeconds - GAME_CONFIG.timerSpeedMultiplier);
+                    // Sync the central room board with the authoritative countdown
+                    if (this.roomTimerDisplay) {
+                        this.roomTimerDisplay.setText(`TIME REMAINING: ${this.formatClock(this.remainingSeconds)}`);
+                    }
                     EventBus.emit(EVENTS.TIME_TICK, {
                         remainingSeconds: this.remainingSeconds,
                         isPaused: this.isPaused
@@ -528,6 +549,14 @@ export class Game extends Scene {
             },
             loop: true
         });
+    }
+
+    /** MM:SS formatting shared by the room board so it matches the HUD exactly. */
+    private formatClock(totalSeconds: number): string {
+        const s = Math.max(0, Math.floor(totalSeconds));
+        const mm = Math.floor(s / 60).toString().padStart(2, '0');
+        const ss = (s % 60).toString().padStart(2, '0');
+        return `${mm}:${ss}`;
     }
 
     private setupEventBusListeners() {
@@ -601,7 +630,7 @@ export class Game extends Scene {
             this.uvOverlayGraphics.fillRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
 
             // Luminescent glow on player paper and ceiling fixtures
-            this.uvOverlayGraphics.fillStyle(0x00f0ff, 0.3);
+            this.uvOverlayGraphics.fillStyle(0xc59b27, 0.3);
             this.uvOverlayGraphics.fillCircle(512, 580, 50);
 
             this.tweens.add({
@@ -623,7 +652,7 @@ export class Game extends Scene {
         playSFX('alarm', 1.0);
 
         this.alarmLightGraphics.clear();
-        this.alarmLightGraphics.fillStyle(0xff1744, 0.4);
+        this.alarmLightGraphics.fillStyle(0xe11d48, 0.4);
         this.alarmLightGraphics.fillRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
 
         this.tweens.add({

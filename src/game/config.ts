@@ -15,6 +15,7 @@ export interface CandidateData {
     color: string;
     accentColor: string;
     avatarSymbol: string;
+    avatarUrl?: string;
     stats: {
         trust: number;       // 0 to 100
         suspicion: number;   // 0 to 100
@@ -79,18 +80,18 @@ export const GAME_CONFIG = {
     examDurationSeconds: 3600, // 60:00
     timerSpeedMultiplier: 4,   // 1 real sec = 4 exam secs (~15 min total real-time max)
     colors: {
-        background: 0x07090e,
+        background: 0x0a0d14,
         chamberFloor: 0x0f131f,
         chamberDesk: 0x181e30,
         gold: 0xd4af37,
         goldHex: '#d4af37',
-        cyan: 0x00f0ff,
-        cyanHex: '#00f0ff',
-        crimson: 0xff3344,
-        crimsonHex: '#ff3344',
+        cyan: 0xf1f5f9,
+        cyanHex: '#f1f5f9',
+        crimson: 0xe11d48,
+        crimsonHex: '#e11d48',
         emerald: 0x00e676,
         emeraldHex: '#00e676',
-        text: '#ffffff',
+        text: '#f8fafc',
         muted: '#8e9bb0',
         darkPanel: '#0a0d16',
         borderPanel: '#1f283e',
@@ -140,6 +141,7 @@ export const CANDIDATES: CandidateData[] = [
         color: '#d4af37',
         accentColor: '#ffe57f',
         avatarSymbol: '👑',
+        avatarUrl: 'https://dala-prod-preview-bucket.s3.eu-west-1.amazonaws.com/images/71acdf3f-79a7-462c-a760-fd443f1d61cc/e1b9d076-be53-4188-b773-b33aff1c2e4a/image.png',
         stats: { trust: 40, suspicion: 55, respect: 85, fear: 10, cooperation: 50 },
         secrets: [
             'Recognizes the invigilator seal on the wall as the secretive Pan-African Sovereign Council protocol.',
@@ -833,7 +835,7 @@ export const ENDINGS = {
         color: '#00e676',
         summary: 'You wrote "Human Conscience" across the blank paper after uncovering the hidden UV question. The heavy doors slide open in gold illumination. The Chief Invigilator steps into the chamber and announces that you alone proved that true authority cannot be bought, coerced, or deceived.',
         quote: '“An examination tests memory. True governance requires a soul.”',
-        grade: 'RANK S - SOVEREIGN ARCHITECT'
+        grade: 'RANK S - HUMAN EXAM ARCHITECT'
     },
     BRIBE_SELLOUT: {
         id: 'BRIBE_SELLOUT',

@@ -65,7 +65,7 @@ export function App() {
 
     const [terminalInput, setTerminalInput] = useState<string>('');
     const [terminalLogs, setTerminalLogs] = useState<string[]>([
-        'SOVEREIGN EXAMINATION OS v4.2 [LAGOS SECTOR 07]',
+        'LAGOS CENTRAL EXECUTIVE TESTING FACILITY // SECTOR 01',
         'STATUS: ALL 9 CANDIDATES SEATED // 60:00 TIMER RUNNING',
         'ENTER 3-DIGIT SUPERVISOR ACCESS PIN...'
     ]);
@@ -176,6 +176,10 @@ export function App() {
         const secs = seconds % 60;
         return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
     };
+
+    const isCurrentPhasePaused = (p: GamePhase) =>
+        p === 'DIALOGUE' || p === 'CLUE_BOARD' || p === 'TERMINAL' || p === 'CABINET' ||
+        p === 'PAPER_INSPECTION' || p === 'RULES_MODAL' || p === 'SUBMISSION';
 
     const closeModal = () => {
         setPhase('PLAYING');
@@ -373,8 +377,11 @@ export function App() {
 
                         <div className={`glass-panel ${remainingSeconds <= 600 ? 'crimson-border pulsing-alert' : 'gold-border'}`} style={{ padding: '6px 18px', borderRadius: '4px', display: 'flex', alignItems: 'center', gap: '12px' }}>
                             <span>⏱️</span>
-                            <div style={{ fontFamily: 'var(--font-mono)', fontSize: '16px', fontWeight: 700, color: remainingSeconds <= 600 ? '#ff3344' : '#00f0ff' }}>
+                            <div style={{ fontFamily: 'var(--font-mono)', fontSize: '16px', fontWeight: 700, color: remainingSeconds <= 600 ? '#e11d48' : '#f1f5f9' }}>
                                 {formatTime(remainingSeconds)}
+                            </div>
+                            <div style={{ fontSize: '9px', fontFamily: 'var(--font-mono)', color: '#d4af37', letterSpacing: '1px' }}>
+                                {isCurrentPhasePaused(phase) ? 'RECORDING PAUSED // INTERACTION ACTIVE' : 'EXAM IN PROGRESS'}
                             </div>
                             <div style={{ fontSize: '10px', fontFamily: 'var(--font-mono)', color: '#94a3b8', borderLeft: '1px solid #2a3754', paddingLeft: '8px' }}>
                                 {verifiedCluesCount} CLUES
@@ -397,7 +404,7 @@ export function App() {
                         <div className="glass-panel gold-border" style={{ maxWidth: '640px', width: '100%', padding: '36px', borderRadius: '8px', textAlign: 'center' }}>
                             <div style={{ fontSize: '32px', marginBottom: '8px' }}>⚖️</div>
                             <h1 style={{ fontFamily: 'var(--font-serif)', fontSize: '26px', color: '#d4af37', letterSpacing: '3px', margin: '0 0 8px 0' }}>THE HUMAN EXAM</h1>
-                            <div style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', color: '#00f0ff', letterSpacing: '2px', marginBottom: '20px' }}>CASE 01: THE BLANK PAGE // NIGERIAN SOVEREIGN HALL</div>
+                            <div style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', color: '#d4af37', letterSpacing: '2px', marginBottom: '20px' }}>CASE 01: THE BLANK PAGE // LAGOS EXECUTIVE HALL</div>
                             <p style={{ color: '#cbd5e1', fontSize: '13px', lineHeight: '1.7', marginBottom: '24px', textAlign: 'left', backgroundColor: 'rgba(0,0,0,0.3)', padding: '14px 18px', borderRadius: '4px', borderLeft: '3px solid #d4af37' }}>
                                 Summoned into an elite Lagos examination chamber alongside eight African visionaries, you are given 60 minutes and a blank sheet of paper. Interrogate candidates, examine room equipment, and deduce the unwritten question.
                             </p>
@@ -434,8 +441,16 @@ export function App() {
                         <div className="glass-panel" style={{ maxWidth: '800px', width: '100%', maxHeight: '90vh', display: 'flex', flexDirection: 'column', borderRadius: '8px', overflow: 'hidden', border: `1px solid ${selectedCandidate.color}` }}>
                             <div style={{ padding: '14px 18px', backgroundColor: 'rgba(0,0,0,0.4)', borderBottom: '1px solid #1e2942', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                                 <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                                    <div style={{ width: '40px', height: '40px', borderRadius: '50%', backgroundColor: selectedCandidate.color, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '20px' }}>
-                                        {selectedCandidate.avatarSymbol}
+                                    <div style={{ width: '40px', height: '40px', borderRadius: '50%', backgroundColor: selectedCandidate.color, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '20px', overflow: 'hidden' }}>
+                                        {selectedCandidate.avatarUrl ? (
+                                            <img
+                                                src={selectedCandidate.avatarUrl}
+                                                alt={selectedCandidate.name}
+                                                style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }}
+                                            />
+                                        ) : (
+                                            selectedCandidate.avatarSymbol
+                                        )}
                                     </div>
                                     <div>
                                         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -451,10 +466,10 @@ export function App() {
                             <div style={{ padding: '10px 18px', backgroundColor: 'rgba(10,15,26,0.7)', borderBottom: '1px solid #1e2942', display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '10px' }}>
                                 {[
                                     { label: 'TRUST', value: selectedCandidate.stats.trust, color: '#00e676' },
-                                    { label: 'SUSPICION', value: selectedCandidate.stats.suspicion, color: '#ff3344' },
+                                    { label: 'SUSPICION', value: selectedCandidate.stats.suspicion, color: '#e11d48' },
                                     { label: 'RESPECT', value: selectedCandidate.stats.respect, color: '#d4af37' },
                                     { label: 'FEAR', value: selectedCandidate.stats.fear, color: '#ff9100' },
-                                    { label: 'COOP', value: selectedCandidate.stats.cooperation, color: '#00f0ff' }
+                                    { label: 'COOP', value: selectedCandidate.stats.cooperation, color: '#f1f5f9' }
                                 ].map(st => (
                                     <div key={st.label}>
                                         <div style={{ display: 'flex', justifyContent: 'space-between', fontFamily: 'var(--font-mono)', fontSize: '9px', color: '#8e9bb0' }}>
@@ -470,7 +485,7 @@ export function App() {
 
                             <div style={{ padding: '16px', flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '10px', maxHeight: '260px', background: 'rgba(5,7,12,0.4)' }}>
                                 {dialogueHistory.map((txt, idx) => (
-                                    <div key={idx} style={{ padding: '8px 12px', borderRadius: '4px', fontSize: '12px', lineHeight: '1.5', backgroundColor: txt.startsWith('[YOU]') ? 'rgba(0,240,255,0.08)' : 'rgba(255,255,255,0.04)', borderLeft: txt.startsWith('[YOU]') ? '3px solid #00f0ff' : `3px solid ${selectedCandidate.color}`, color: '#e2e8f0' }}>
+                                    <div key={idx} style={{ padding: '8px 12px', borderRadius: '4px', fontSize: '12px', lineHeight: '1.5', backgroundColor: txt.startsWith('[YOU]') ? 'rgba(212,175,55,0.08)' : 'rgba(255,255,255,0.04)', borderLeft: txt.startsWith('[YOU]') ? '3px solid #d4af37' : `3px solid ${selectedCandidate.color}`, color: '#e2e8f0' }}>
                                         {txt}
                                     </div>
                                 ))}
@@ -505,11 +520,11 @@ export function App() {
                                 </div>
                                 <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                                     <span style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', color: '#8e9bb0' }}>SYNTHESIZE:</span>
-                                    <span style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', padding: '3px 6px', border: '1px dashed #2a3754', borderRadius: '3px', color: synthesisSlotA ? '#00f0ff' : '#64748b' }}>
+                                    <span style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', padding: '3px 6px', border: '1px dashed #2a3754', borderRadius: '3px', color: synthesisSlotA ? '#d4af37' : '#64748b' }}>
                                         {synthesisSlotA ? clues.find(c => c.id === synthesisSlotA)?.title.substring(0, 14) + '...' : '[SLOT 1]'}
                                     </span>
                                     <span style={{ color: '#8e9bb0' }}>+</span>
-                                    <span style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', padding: '3px 6px', border: '1px dashed #2a3754', borderRadius: '3px', color: synthesisSlotB ? '#00f0ff' : '#64748b' }}>
+                                    <span style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', padding: '3px 6px', border: '1px dashed #2a3754', borderRadius: '3px', color: synthesisSlotB ? '#d4af37' : '#64748b' }}>
                                         {synthesisSlotB ? clues.find(c => c.id === synthesisSlotB)?.title.substring(0, 14) + '...' : '[SLOT 2]'}
                                     </span>
                                     <button className="btn-prime btn-gold interactive" style={{ padding: '4px 10px', fontSize: '10px' }} onClick={handleSynthesizeClues}>⚡ COMBINE</button>
@@ -517,7 +532,7 @@ export function App() {
                             </div>
 
                             {synthesisFeedback && (
-                                <div style={{ padding: '6px 20px', backgroundColor: 'rgba(0,240,255,0.1)', borderBottom: '1px solid #00f0ff', fontFamily: 'var(--font-mono)', fontSize: '11px', color: '#00f0ff' }}>
+                                <div style={{ padding: '6px 20px', backgroundColor: 'rgba(212,175,55,0.1)', borderBottom: '1px solid #d4af37', fontFamily: 'var(--font-mono)', fontSize: '11px', color: '#d4af37' }}>
                                     {synthesisFeedback}
                                 </div>
                             )}
@@ -532,7 +547,7 @@ export function App() {
                                             style={{
                                                 padding: '12px',
                                                 borderRadius: '6px',
-                                                border: isSel ? '1px solid #00f0ff' : clue.discovered ? '1px solid #23304d' : '1px dashed #1a2233',
+                                                border: isSel ? '1px solid #d4af37' : clue.discovered ? '1px solid #23304d' : '1px dashed #1a2233',
                                                 backgroundColor: clue.discovered ? 'rgba(14,19,34,0.8)' : 'rgba(5,7,12,0.6)',
                                                 cursor: clue.discovered ? 'pointer' : 'default'
                                             }}
@@ -547,7 +562,7 @@ export function App() {
                                         >
                                             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
                                                 <span style={{ fontFamily: 'var(--font-mono)', fontSize: '8px', color: clue.status === 'VERIFIED' ? '#00e676' : '#ffca28' }}>{clue.category}</span>
-                                                {isSel && <span style={{ color: '#00f0ff', fontSize: '9px', fontFamily: 'var(--font-mono)' }}>ACTIVE</span>}
+                                                {isSel && <span style={{ color: '#d4af37', fontSize: '9px', fontFamily: 'var(--font-mono)' }}>ACTIVE</span>}
                                             </div>
                                             <div style={{ fontSize: '12px', fontWeight: 700, color: clue.discovered ? '#f8fafc' : '#64748b', marginBottom: '4px' }}>
                                                 {clue.discovered ? clue.title : '??? [UNDISCOVERED]'}
@@ -568,7 +583,7 @@ export function App() {
                     <div style={{ position: 'absolute', inset: 0, backgroundColor: 'rgba(5,7,12,0.92)', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 150, padding: '20px' }}>
                         <div className="glass-panel cyan-border" style={{ maxWidth: '680px', width: '100%', borderRadius: '8px', overflow: 'hidden', backgroundColor: '#04100c' }}>
                             <div style={{ padding: '10px 16px', backgroundColor: '#061c14', borderBottom: '1px solid #00e676', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                <div style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: '#00e676', fontWeight: 700 }}>🖥️ SOVEREIGN TERMINAL // SECTOR 07</div>
+                                <div style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: '#00e676', fontWeight: 700 }}>🖥️ FACILITY TERMINAL // SECTOR 01</div>
                                 <button className="btn-prime interactive" onClick={closeModal}>✕ EXIT</button>
                             </div>
                             <div style={{ padding: '16px', minHeight: '220px', maxHeight: '300px', overflowY: 'auto', fontFamily: 'var(--font-mono)', fontSize: '11px', color: '#00e676', lineHeight: '1.6', backgroundColor: '#020a07' }}>
@@ -639,12 +654,12 @@ export function App() {
                                 marginBottom: '16px'
                             }}>
                                 <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid #cbd5e1', paddingBottom: '6px' }}>
-                                    <span style={{ fontFamily: 'var(--font-mono)', fontSize: '9px', color: isUVActive ? '#00f0ff' : '#64748b' }}>SOVEREIGN CHARTER</span>
-                                    <span style={{ fontFamily: 'var(--font-mono)', fontSize: '9px', color: isUVActive ? '#00f0ff' : '#64748b' }}>CANDIDATE 09</span>
+                                    <span style={{ fontFamily: 'var(--font-mono)', fontSize: '9px', color: isUVActive ? '#d4af37' : '#64748b' }}>EXECUTIVE CHARTER</span>
+                                    <span style={{ fontFamily: 'var(--font-mono)', fontSize: '9px', color: isUVActive ? '#d4af37' : '#64748b' }}>CANDIDATE 09</span>
                                 </div>
                                 <div style={{ textAlign: 'center', padding: '16px 0' }}>
                                     {isUVActive ? (
-                                        <div style={{ fontFamily: 'var(--font-serif)', fontSize: '15px', color: '#00f0ff', lineHeight: '1.7', textShadow: '0 0 10px #00f0ff' }}>
+                                        <div style={{ fontFamily: 'var(--font-serif)', fontSize: '15px', color: '#d4af37', lineHeight: '1.7', textShadow: '0 0 10px #d4af37' }}>
                                             “WHAT IS THE ONLY RESOURCE AN EXAMINATION CANNOT MEASURE?”
                                         </div>
                                     ) : (
@@ -654,8 +669,8 @@ export function App() {
                                     )}
                                 </div>
                                 <div style={{ display: 'flex', justifyContent: 'space-between', borderTop: '1px solid #cbd5e1', paddingTop: '6px' }}>
-                                    <span style={{ fontFamily: 'var(--font-mono)', fontSize: '8px', color: isUVActive ? '#00f0ff' : '#94a3b8' }}>WATERMARK: [ETHICS_CORE_01]</span>
-                                    <span style={{ fontFamily: 'var(--font-mono)', fontSize: '8px', color: isUVActive ? '#00f0ff' : '#94a3b8' }}>SEAL: OK</span>
+                                    <span style={{ fontFamily: 'var(--font-mono)', fontSize: '8px', color: isUVActive ? '#d4af37' : '#94a3b8' }}>WATERMARK: [ETHICS_CORE_01]</span>
+                                    <span style={{ fontFamily: 'var(--font-mono)', fontSize: '8px', color: isUVActive ? '#d4af37' : '#94a3b8' }}>SEAL: OK</span>
                                 </div>
                             </div>
 
@@ -701,7 +716,7 @@ export function App() {
                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
                                 <div>
                                     <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: '20px', color: '#d4af37', margin: 0 }}>FINAL SUBMISSION</h2>
-                                    <div style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', color: '#00f0ff' }}>Rule 3: Only ONE candidate will be chosen.</div>
+                                    <div style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', color: '#d4af37' }}>Rule 3: Only ONE candidate will be chosen.</div>
                                 </div>
                                 <button className="btn-prime interactive" onClick={closeModal}>✕ CANCEL</button>
                             </div>
