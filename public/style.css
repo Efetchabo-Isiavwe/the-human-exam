@@ -1,0 +1,191 @@
+/* THE HUMAN EXAM - Graphic Novel Cyber-Noir Aesthetic */
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=JetBrains+Mono:wght@400;600;700&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap');
+
+:root {
+    --bg-main: #07090e;
+    --bg-surface: #0e1322;
+    --bg-card: #141b30;
+    --bg-card-hover: #1c2642;
+    --border-dim: #1e2942;
+    --border-gold: #d4af37;
+    --border-cyan: #00f0ff;
+    --gold-glow: rgba(212, 175, 55, 0.35);
+    --cyan-glow: rgba(0, 240, 255, 0.35);
+    --crimson: #ff3344;
+    --crimson-glow: rgba(255, 51, 68, 0.35);
+    --emerald: #00e676;
+    --emerald-glow: rgba(0, 230, 118, 0.35);
+    --text-primary: #f8fafc;
+    --text-secondary: #94a3b8;
+    --text-muted: #64748b;
+    --font-serif: 'Cinzel', serif;
+    --font-mono: 'JetBrains Mono', monospace;
+    --font-sans: 'Plus Jakarta Sans', sans-serif;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    color: var(--text-primary);
+    background-color: var(--bg-main);
+    font-family: var(--font-sans);
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+#app {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    height: 100dvh;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--bg-main);
+}
+
+#game-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#hud {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 100;
+}
+
+#hud button,
+#hud input,
+#hud textarea,
+#hud [role="button"],
+#hud .interactive {
+    pointer-events: auto;
+}
+
+/* Glassmorphism Panels */
+.glass-panel {
+    background: rgba(14, 19, 34, 0.94);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--border-dim);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8), 0 0 1px 1px rgba(255, 255, 255, 0.05);
+}
+
+.gold-border {
+    border-color: var(--border-gold);
+    box-shadow: 0 0 20px var(--gold-glow);
+}
+
+.cyan-border {
+    border-color: var(--border-cyan);
+    box-shadow: 0 0 20px var(--cyan-glow);
+}
+
+.crimson-border {
+    border-color: var(--crimson);
+    box-shadow: 0 0 20px var(--crimson-glow);
+}
+
+/* Buttons */
+.btn-prime {
+    background: linear-gradient(135deg, #18223d 0%, #0f1526 100%);
+    border: 1px solid var(--border-dim);
+    color: var(--text-primary);
+    padding: 8px 16px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    border-radius: 4px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-prime:hover {
+    border-color: var(--border-gold);
+    color: #ffd700;
+    box-shadow: 0 0 12px var(--gold-glow);
+    transform: translateY(-1px);
+}
+
+.btn-prime:active {
+    transform: translateY(0);
+}
+
+.btn-gold {
+    background: linear-gradient(135deg, #d4af37 0%, #aa8c2c 100%);
+    border: 1px solid #ffe57f;
+    color: #07090e;
+    font-weight: 700;
+}
+
+.btn-gold:hover {
+    background: linear-gradient(135deg, #ffe066 0%, #d4af37 100%);
+    color: #000;
+    box-shadow: 0 0 16px rgba(255, 215, 0, 0.6);
+}
+
+.btn-cyan {
+    background: linear-gradient(135deg, #00b4d8 0%, #0077b6 100%);
+    border: 1px solid var(--border-cyan);
+    color: #fff;
+    font-weight: 700;
+}
+
+.btn-cyan:hover {
+    box-shadow: 0 0 16px var(--cyan-glow);
+}
+
+/* Animations */
+@keyframes pulse-red {
+    0%, 100% { opacity: 1; filter: drop-shadow(0 0 6px rgba(255, 51, 68, 0.8)); }
+    50% { opacity: 0.6; filter: drop-shadow(0 0 1px rgba(255, 51, 68, 0.2)); }
+}
+
+@keyframes scanline {
+    0% { transform: translateY(-100%); }
+    100% { transform: translateY(1000%); }
+}
+
+.pulsing-alert {
+    animation: pulse-red 1.2s infinite ease-in-out;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: #090c14;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #1e2942;
+    border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--border-gold);
+}
