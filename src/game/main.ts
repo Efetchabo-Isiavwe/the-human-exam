@@ -219,7 +219,7 @@ export class Game extends Scene {
         g.lineBetween(190, 35, 190, 45);
         g.lineBetween(190, 45, 175, 45);
 
-        const headerText = this.add.text(0, -30, 'SOVEREIGN CHARTER EVALUATION // CASE 01', {
+        const headerText = this.add.text(0, -30, 'THE HUMAN EXAM // CASE 01', {
             fontFamily: 'monospace',
             fontSize: '11px',
             color: '#d4af37'
@@ -232,7 +232,7 @@ export class Game extends Scene {
             color: '#00f0ff'
         }).setOrigin(0.5);
 
-        const statusText = this.add.text(0, 22, 'RULE 05: ONE QUESTION. ONE ANSWER.', {
+        const statusText = this.add.text(0, 22, 'RULE 05: WHEN TIME EXPIRES, THE EXAMINATION ENDS.', {
             fontFamily: 'monospace',
             fontSize: '11px',
             color: '#e63946'

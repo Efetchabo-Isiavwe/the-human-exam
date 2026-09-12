@@ -65,7 +65,7 @@ export function App() {
 
     const [terminalInput, setTerminalInput] = useState<string>('');
     const [terminalLogs, setTerminalLogs] = useState<string[]>([
-        'SOVEREIGN EXAMINATION OS v4.2 [LAGOS SECTOR 07]',
+        'EXAMINATION SYSTEM // CASE 01',
         'STATUS: ALL 9 CANDIDATES SEATED // 60:00 TIMER RUNNING',
         'ENTER 3-DIGIT SUPERVISOR ACCESS PIN...'
     ]);
@@ -397,7 +397,7 @@ export function App() {
                         <div className="glass-panel gold-border" style={{ maxWidth: '640px', width: '100%', padding: '36px', borderRadius: '8px', textAlign: 'center' }}>
                             <div style={{ fontSize: '32px', marginBottom: '8px' }}>⚖️</div>
                             <h1 style={{ fontFamily: 'var(--font-serif)', fontSize: '26px', color: '#d4af37', letterSpacing: '3px', margin: '0 0 8px 0' }}>THE HUMAN EXAM</h1>
-                            <div style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', color: '#00f0ff', letterSpacing: '2px', marginBottom: '20px' }}>CASE 01: THE BLANK PAGE // NIGERIAN SOVEREIGN HALL</div>
+                            <div style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', color: '#00f0ff', letterSpacing: '2px', marginBottom: '20px' }}>CASE 01: THE ROOM // LAGOS, NIGERIA</div>
                             <p style={{ color: '#cbd5e1', fontSize: '13px', lineHeight: '1.7', marginBottom: '24px', textAlign: 'left', backgroundColor: 'rgba(0,0,0,0.3)', padding: '14px 18px', borderRadius: '4px', borderLeft: '3px solid #d4af37' }}>
                                 Summoned into an elite Lagos examination chamber alongside eight African visionaries, you are given 60 minutes and a blank sheet of paper. Interrogate candidates, examine room equipment, and deduce the unwritten question.
                             </p>
@@ -419,7 +419,7 @@ export function App() {
                         <div className="glass-panel gold-border" style={{ padding: '14px 20px', borderRadius: '6px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                             <div>
                                 <div style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', color: '#d4af37' }}>INVIGILATOR BROADCAST</div>
-                                <div style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', color: '#f8fafc', marginTop: '3px' }}>“You have 60 minutes. There is only ONE question, and only ONE correct answer.”</div>
+                                <div style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', color: '#f8fafc', marginTop: '3px' }}>“You have 60 minutes. There is one question. The paper is blank. Begin.”</div>
                             </div>
                             <button className="btn-prime interactive" onClick={() => { playSFX('click'); setPhase('PLAYING'); if (phaserRef.current.scene) (phaserRef.current.scene as Game).skipCinematic(); }}>
                                 SKIP ⏭️
